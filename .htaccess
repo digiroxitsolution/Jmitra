@@ -1,0 +1,38 @@
+# Prevent access to sensitive files
+<Files .*>
+    # For Apache 2.2
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+    # For Apache 2.4
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</Files>
+
+# Redirect everything to the public folder
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+
+# Prevent access to sensitive files
+# <Files .*>
+#     # For Apache 2.2
+#     <IfModule !mod_authz_core.c>
+#         Order deny,allow
+#         Deny from all
+#     </IfModule>
+#     # For Apache 2.4
+#     <IfModule mod_authz_core.c>
+#         Require all denied
+#     </IfModule>
+# </Files>
+
+# # Redirect everything to the public folder
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteRule ^(.*)$ public/$1 [L]
+# </IfModule>

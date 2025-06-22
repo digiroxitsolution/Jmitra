@@ -1,0 +1,282 @@
+/* Merriweather Font */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
+
+:root{
+	--main-bg-color: #F2F2F2; /*grey*/
+	--main-text-color:#049DD9; /*blue*/
+	--second-bg-color:#c1efde; /*green*/
+	--second-text-color:#000000; /*black*/
+	--third-bg-color:#077fad; /*dark blue*/
+	--fourth-bg-color: #D95204; /*orange*/
+	--fifth-bg-color: #8BA1E1; /*purple*/ 
+	--sixth-bg-color: #035E73; /*dark-green*/ 
+	--seventh-bg-color: #4168DD; /*login color*/ 
+}
+
+body{
+	font-family: "Merriweather", serif;;
+}
+
+.primary-text{
+	color: var(--main-text-color);
+}
+
+.second-text{
+	color: var(--second-text-color);
+}
+
+.secondary-bg{
+	background-color: var(--second-bg-color);
+}
+
+.rounded-full{
+	border-radius: 100%;
+}
+
+.dashboard-icon{
+	background-color: var(--sixth-bg-color);
+	color: var(--main-bg-color);
+	position: relative;
+	top: -30px;
+	left: 0;
+}
+
+.box{
+	height: 250px;
+	color: var(--sixth-bg-color);
+}
+
+.box h3,h5{
+	font-weight: 700;
+}
+
+.box p{
+	font-weight: 500
+}
+
+.role{
+	color: var(--main-text-color);
+}
+
+#wrapper{
+	overflow-x: hidden;
+/*	background-image: linear-gradient(to right, #F2F2F2,#c2f5de, #cbf7e4, #d4f8ea, #ddfaef);*/
+}
+
+#sidebar-wrapper{
+	min-height: 100vh;
+	margin-left: -15rem;
+	-webkit-transition: margin 0.25s ease-out;;
+	-moz-transition: margin 0.25s ease-out;;
+	-o-transition: margin 0.25s ease-out;;
+	transition: margin 0.25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading{
+	padding: 0.875rem 1.25rem;
+	font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group{
+	width: 15rem;
+}
+
+#page-content-wrapper{
+	min-width: 100vw;
+	background-color: var(--main-bg-color);
+}
+
+#wrapper.toggled #sidebar-wrapper{
+	margin-left: 0;
+}
+
+#menu-toggle, #notifications{
+	cursor: pointer;
+}
+
+.list-group-item{
+	border:none;
+	padding: 20px 30px;
+	font-weight: 500;
+	display: flex;
+	align-items:center;
+}
+
+.list-group-item:hover{
+	color: #ffffff;
+	background-color: var(--main-text-color) !important;
+}
+
+.list-group-item.active{
+	background-color: transparent;
+	color: var(--main-text-color);
+	font-weight: bold;
+	border: none;
+}
+
+#button-addon2{
+	border: 1px solid #dedcdc;
+}
+
+#button-addon2:hover{
+	color: #FFFFFF;
+	background-color:#656D73;
+}
+
+#navbarDropdown{
+	width: 37px;
+}
+
+.dropdown-menu span{
+	color: var(--main-text-color);
+}
+
+.active{
+	color: #ffffff !important;
+	background-image: linear-gradient(to right, var(--third-bg-color) , var(--main-text-color));
+}
+
+.add{
+	color: #FFFFFF;
+	background-color: var(--main-text-color);
+}
+
+.add:hover{
+	color: #FFFFFF;
+	background-color: var(--third-bg-color);
+}
+
+.table tr th{
+	font-weight: 600;
+	color: var(--third-bg-color);
+}
+
+.table-header{
+	width: 100%;
+	background-image: linear-gradient(to right, var(--third-bg-color) , var(--main-text-color));
+}
+
+.table-responsive{
+	width: 100%;
+}
+
+.table{
+	width: 100%;
+}
+
+tbody tr td span i{
+	cursor: pointer;
+}
+
+.navbar div h2{
+	color: var(--main-text-color);
+}
+
+.modal-header{
+	color: #FFFFFF;
+	background-image: linear-gradient(to right, var(--third-bg-color) , var(--main-text-color));
+}
+
+.Viewtext{
+	color: var(--main-text-color);
+}
+
+.final-print {
+	background-color: var(--fourth-bg-color);
+	color: #FFFFFF
+}
+
+.search-by-month{
+	color: var(--main-text-color);
+	font-weight: 900;
+}
+
+#loginBody{
+	background-color: var(--fifth-bg-color);
+}
+
+.loginContainer{
+	height: 100vh;
+}
+
+#loginImage{
+	width: 500px;
+}
+
+.card-head img{
+	width: 500px;
+}
+
+.card-body h3{
+	color: var(--main-text-color);
+	font-weight: 900;
+}
+
+.card-body .btn{
+/*	background-color: var(--fifth-bg-color);*/
+/*	color: #FFFFFF;*/
+}
+
+.login-title{
+	color: var(--seventh-bg-color) !important;
+}
+
+@media (min-width:768px){
+	#sidebar-wrapper{
+		margin-left:0;
+	}
+	#page-content-wrapper{
+		min-width:0;
+		width:100%;
+	}
+	#wrapper.toggled #sidebar-wrapper{
+		margin-left: -15rem;
+	}
+}
+
+.sidebar-heading img{
+	width: 165px;
+}
+
+.no-border {
+    border: 0;
+    box-shadow: none; /* You may want to include this as bootstrap applies these styles too */
+}
+
+
+.history-cell {
+    position: relative;  /* Ensure the parent is positioned */
+}
+
+.history-tooltip {
+    display: none;  /* Initially hide the tooltip */
+    position: absolute;
+    top: 0;  /* Adjust to position it above or below */
+    left: 100%;  /* Position it to the right */
+    background-color: rgba(0, 0, 0, 0.7); /* Background color to check visibility */
+    color: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    font-size: 12px;
+    z-index: 10;
+}
+
+.history-cell:hover .history-tooltip {
+    display: block;  /* Show tooltip on hover */
+}
+
+
+/* Change the color of horizontal row lines */
+.dataTables_wrapper .dataTables_scrollBody table tbody tr {
+    border-bottom: 1px solid #accfde; /* Replace #ddd with your desired color */ #ddd
+}
+
+/* Ensure the header and footer rows match the same border styles */
+.dataTables_wrapper .dataTables_scrollBody table thead th,
+.dataTables_wrapper .dataTables_scrollBody table tfoot th {
+    border-bottom: 1px solid #accfde; /* Optional: Change header/footer border */ #ddd
+}
+
+td.edited {
+            background-color: #8a9da5;
+        }

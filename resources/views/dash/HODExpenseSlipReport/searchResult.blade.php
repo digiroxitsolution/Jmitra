@@ -100,7 +100,7 @@
 							<tbody>
 								<tr class="table-active fw-bold">
 									<td></td>
-									<td>HQ Days</td>
+									<td>WL Days</td>  {{--changes by avinash from HQ to WL--}}
 									<td>Out Days</td>
 									<td colspan="2">SUM (Rs.)</td>
 								</tr>

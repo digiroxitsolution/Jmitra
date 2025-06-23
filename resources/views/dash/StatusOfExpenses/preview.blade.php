@@ -15,7 +15,8 @@
 	<link rel="icon" href="{{ asset('assets/images/Favicon.png') }}">
 	<title>@yield('title', config('app.name', 'Jmitra & Co. Pvt. Ltd'))</title>
 	
-	 
+	
+	
 
 </head>
 <body>
@@ -50,7 +51,7 @@
 						<div class="card-header" style="background-color:#077fad; color:white;">
 						  <h4 class="" style="height: 50px;">Preview of {{ \Carbon\Carbon::parse($month)->format('F') }} Expenses
 
-						  	<button id="download-pdf" class="btn btn-primary">Download PDF</button>
+						  	<button id="download-pdf" class="btn btn-primary exclude-from-pdf">Download PDF</button>
 
 
 						  </h4>
@@ -119,7 +120,7 @@
 											<td rowspan="2">TEL/TGM</td>
 											<td colspan="2">Other Expenses</td>
 											<td rowspan="2">Print Stationery</td>
-											<td rowspan="2">Attendace</td>
+											<td rowspan="2" class="exclude-from-pdf">Attendace</td>
 										</tr>
 										<tr class="table-active fw-bold">
 											<td>DEP</td>
@@ -181,7 +182,7 @@
 											<td>{{ $monthly_expense->OtherExpenseMaster->other_expense ?? 'N/A' }}</td>
 											<td>{{ $monthly_expense->other_expenses_amount ?? 'N/A' }}</td>
 											<td>{{ $monthly_expense->print_stationery ?? 'N/A' }}</td>
-											<td class="table-active">
+											<td class="table-active exclude-from-pdf">
 														<a href="javascript:void(0);" 
 														   data-url="{{ route('get_other_attendance', ['id' => $usser->id, 'attendance_date' => $monthly_expense->expense_date]) }}" 
 														   class="view-attendance-btn">
@@ -459,7 +460,7 @@
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script>
+{{-- <script>
 document.getElementById("download-pdf").addEventListener("click", function () {
     const element = document.getElementById("pdf-content");
 
@@ -492,7 +493,69 @@ document.getElementById("download-pdf").addEventListener("click", function () {
         document.body.removeChild(clone);
     });
 });
-</script>
-		
+</script> --}}
+{{-- <script>
+	document.getElementById("download-pdf").addEventListener("click", function () {
+		const element = document.getElementById("pdf-content");
+	
+		const opt = {
+			margin:       0.2,
+			filename:     'Expense_Report.pdf',
+			image:        { type: 'jpeg', quality: 0.98 },
+			html2canvas:  {
+				scale: 2, // Higher scale improves resolution
+				useCORS: true // Use this if you have external images or fonts
+			},
+			jsPDF: {
+				unit: 'mm',
+				format: 'a3',
+				orientation: 'landscape'
+			}
+		};
+	
+		html2pdf().set(opt).from(element).save();
+	});
+	</script> --}}
+	<script>
+		document.getElementById("download-pdf").addEventListener("click", function () {
+    const element = document.getElementById("pdf-content");
+
+    // Temporarily hide elements
+    document.querySelectorAll('.exclude-from-pdf').forEach(el => {
+        el.classList.add('temp-hide');
+    });
+
+    // Apply .exclude-from-pdf class temporarily
+    document.querySelectorAll('.exclude-from-pdf').forEach(el => {
+        el.style.display = 'none';
+    });
+
+    const opt = {
+        margin: 0.5,
+        filename: 'Expense_Report_A3_Landscape.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true
+        },
+        jsPDF: {
+            unit: 'mm',
+            format: 'a3',
+            orientation: 'landscape'
+        },
+        pagebreak: {
+            mode: ['avoid-all', 'css', 'legacy']
+        }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+        // Restore elements after PDF is generated
+        document.querySelectorAll('.exclude-from-pdf').forEach(el => {
+            el.style.display = '';
+        });
+    });
+});
+
+	</script>
 </body>
 </html>

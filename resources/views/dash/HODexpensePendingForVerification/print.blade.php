@@ -49,8 +49,8 @@ Open Modal -->
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px" colspan="2">Daily Allowances</td>
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px" rowspan="2">Postage</td>
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px" rowspan="2">TEL/TGM</td>
+                                    <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px" >Print Stationary</td>
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px" colspan="2">Other Expenses</td>
-                                    <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">Print Stationary</td>
                                     
                                 </tr>
 
@@ -61,9 +61,9 @@ Open Modal -->
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">Working</td>
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">N. Working</td>
                                     
+                                    <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px"></td>
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">Purpose</td>
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">Amount</td>
-                                    <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px"></td>
                                     
                                 </tr>
                                 @foreach($monthly_expenses as $key => $monthly_expense)
@@ -125,12 +125,13 @@ Open Modal -->
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">{{ $monthly_expense->postage }}</td>
 
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">{{ $monthly_expense->mobile_internet }}</td>
+                                  
+                                    <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">{{ $monthly_expense->print_stationery }}</td>
 
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">{{ $monthly_expense->OtherExpenseMaster->other_expense ?? '' }}</td>
 
                                     <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">{{ $monthly_expense->other_expenses_amount }}</td>
 
-                                    <td style="border: 1px solid #a8acb1; padding: 5px 10px 10px 15px">{{ $monthly_expense->print_stationery }}</td>
 
                                     
                                 </tr>

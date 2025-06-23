@@ -38,7 +38,7 @@
                     <tbody>
                         <tr style="background-color: #e9ecef; font-weight: bold;">
                             <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
-                            <td style="border: 1px solid #dee2e6; padding: 8px;">HQ Days</td>
+                            <td style="border: 1px solid #dee2e6; padding: 8px;">WL Days</td> {{-- from HQ to WL by avinash--}}
                             <td style="border: 1px solid #dee2e6; padding: 8px;">Out Days</td>
                             <td colspan="2" style="border: 1px solid #dee2e6; padding: 8px;">SUM (Rs.)</td>
                         </tr>

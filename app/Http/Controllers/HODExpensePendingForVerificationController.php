@@ -435,7 +435,7 @@ $holidays = collect($response->json())
                     continue;
                 }
             }
-
+         return redirect()->back()->with('success', 'Expenses updated successfully.');
             return redirect()->route('pending_expense_verification.index')->with('success', 'Expenses updated successfully.');
 
     //     } catch (\Exception $e) {
@@ -471,7 +471,7 @@ $holidays = collect($response->json())
         $pending_monthly_expense->delete();
 
         // Redirect back to the sales master index with a success message
-        return redirect()->route('sales_master.index')->with('success', 'Sales deleted successfully!');
+       return redirect()->route('sales_master.index')->with('success', 'Sales deleted successfully!');
 
     }
 

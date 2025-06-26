@@ -104,6 +104,12 @@
             /* Optional shadow for better visibility */
         }
     </style>
+    <style>
+        .is-invalid {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+    </style>
 
 
 </head>
@@ -166,6 +172,7 @@
 
                                 </div>
                             </div>
+
                             <div class="row mb-4">
                                 <div class="col-lg-4 col-12">
                                     Name: {{ $user->name }}
@@ -267,9 +274,9 @@
                                                             <td>
                                                                 {{ \Carbon\Carbon::parse($monthly_expense->expense_date)->format('l') }}
                                                             </td>
-                                                          
+
                                                             <td>
-                                                                {{ $monthly_expense->ExpenseTypeMaster?->expense_type??'N/A' }}
+                                                                {{ $monthly_expense->ExpenseTypeMaster?->expense_type ?? 'N/A' }}
                                                             </td>
                                                             <td
                                                                 class="history-cell @foreach ($monthly_expense_histories[$key] as $history)
@@ -1049,8 +1056,8 @@
     *****************-->
                     @can('monthly-pending-expense-reject')
                         <!--*******************
-         Reason of Rejected Start
-        *****************-->
+             Reason of Rejected Start
+            *****************-->
                         <div class="modal" tabindex="-1" id="reasonOfRejectedModal">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -1081,8 +1088,8 @@
                             </div>
                         </div>
                         <!--*******************
-         Reason of Rejected End
-        *****************-->
+             Reason of Rejected End
+            *****************-->
                     @endcan
                     <!--*******************
      Reason of Re-Open Start
@@ -1230,7 +1237,7 @@
 
                                             const date = new Date(dateTimeString);
                                             if (isNaN(date.getTime()))
-                                            return 'Invalid Date';
+                                                return 'Invalid Date';
 
                                             // Manually extract and format day, month, and year
                                             const day = String(date.getDate()).padStart(
@@ -1238,7 +1245,7 @@
                                             const month = String(date.getMonth() + 1)
                                                 .padStart(2, '0'); // Months are 0-based
                                             const year = date
-                                        .getFullYear(); // Get full 4-digit year
+                                                .getFullYear(); // Get full 4-digit year
 
                                             // Format time in 12-hour format with AM/PM
                                             let hours = date.getHours();
@@ -1246,7 +1253,7 @@
                                                 .padStart(2, '0');
                                             const amPm = hours >= 12 ? 'PM' : 'AM';
                                             hours = hours % 12 ||
-                                            12; // Convert 24-hour format to 12-hour
+                                                12; // Convert 24-hour format to 12-hour
 
                                             return `${day}-${month}-${year} ${hours}:${minutes} ${amPm}`;
                                         };
@@ -1279,7 +1286,7 @@
                                                 duration = `${hours} hr ${minutes} min`;
                                             } else {
                                                 duration =
-                                                'Invalid duration'; // If check-out is earlier than check-in
+                                                    'Invalid duration'; // If check-out is earlier than check-in
                                             }
                                         }
 
@@ -1555,7 +1562,7 @@
                         if (fromInput.value.trim() !== "" && toInput.value.trim() !== "") {
                             console.log(
                                 `Both "From" and "To" fields are filled for set ${index + 1}. Calculating distance...`
-                                );
+                            );
                             setTimeout(() => {
                                 console.log('Calculating distance now...');
                                 fetchDistanceMatrixOnClick(fromInput, toInput, kmInput);
@@ -1606,7 +1613,7 @@
 
                         if (distance && distance.value) {
                             row.querySelector('[id^="km_as_per_google_map_"]').value = (distance.value / 1000).toFixed(
-                            2); // Set the distance in the km field
+                                2); // Set the distance in the km field
                         } else {
                             alert('Unable to retrieve distance. Try changing location name or fill valid location');
                         }
@@ -1701,6 +1708,40 @@
                 });
             });
         </script>
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const allowedDAValues = @json([
+                $policySetting['location_da'],
+                $policySetting['ex_location_da'],
+                $policySetting['outstation_da']
+            ]).map(Number); // Ensure numeric comparison
+    
+            const daInputs = document.querySelectorAll('input[name^="monthly_expense"][name$="[da_total]"]');
+    
+            daInputs.forEach(input => {
+                // Store the old value when the user focuses in
+                input.addEventListener('focus', function () {
+                    this.dataset.oldValue = this.value;
+                });
+    
+                // Validate on change
+                input.addEventListener('change', function () {
+                    const value = parseInt(this.value.trim());
+                    const isValid = allowedDAValues.includes(value);
+    
+                    if (!isValid && this.value !== '') {
+                        alert("Invalid value entered! Allowed values are: " + allowedDAValues.join(', '));
+                        this.value = this.dataset.oldValue || ''; // revert to old value or blank
+                        this.focus();
+                    }
+                });
+            });
+        });
+    </script>
+    
+    
+        
 
 </body>
 

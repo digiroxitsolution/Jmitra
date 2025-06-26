@@ -512,125 +512,262 @@ class SalesExpensesController extends Controller
 
     }
 
+    // public function SEAnalysis(Request $request)
+    // {
+    //     $title = 'Sales And Expense Analysis';
+
+    //     // Validate the inputs
+    //     $request->validate([
+    //         'fromDate' => 'nullable|date',
+    //         'toDate' => 'nullable|date',
+    //         'monthName' => 'nullable|date_format:Y-m|required_if:fromDate,toDate,NULL',
+    //     ]);
+        
+    //     $monthName = $request->monthName;
+
+    //     // // Extract month and year from the input string (e.g., "2024-09")
+    //     $month = (int)substr($monthName, 5, 2); // Extract month (09)
+    //     $year = (int)substr($monthName, 0, 4); // Extract year (2024)
+
+    //     // Retrieve input data
+    //     $fromDate = $request->input('fromDate');
+    //     $toDate = $request->input('toDate');
+    //     $print_data =[
+    //         'monthName' => $monthName,
+    //         'fromDate' => $fromDate,
+    //         'toDate' => $toDate,
+    //     ];
+    //     if ((!$fromDate && !$toDate) && !$monthName) {
+    //         return view('dash.SalesExpenses.SEAnalysis.index', compact('title'));
+    //     }
+    //     // Retrieve and sort states by short name
+    //     $states = DB::table('states')->orderBy('short', 'ASC')->get();
+    //     $stateNames = $states->pluck('short')->toArray();
+    //     $stateMap = $states->pluck('name', 'short')->toArray();
+    //     // Fake data for testing
+    //     // State Names
+    //     // $stateNames = [
+    //     //     'AP', 'AR', 'AS', 'BR', 'CG', 'GA', 'GJ', 
+    //     //     'HR', 'HP', 'JH', 'MP', 'MH', 'MZ', 'DL', 
+    //     //     'DRH', 'TRY'
+    //     // ];
+    //     //         // State Map
+    //     // $stateMap = [
+    //     //     'AP' => 'Andhra Pradesh',
+    //     //     'AR' => 'Arunachal Pradesh',
+    //     //     'AS' => 'Assam',
+    //     //     'BR' => 'Bihar',
+    //     //     'CG' => 'Chhattisgarh',
+    //     //     'GA' => 'Goa',
+    //     //     'GJ' => 'Gujarat',
+    //     //     'HR' => 'Haryana',
+    //     //     'HP' => 'Himachal Pradesh',
+    //     //     'JH' => 'Jharkhand',
+    //     //     'MP' => 'Madhya Pradesh',
+    //     //     'MH' => 'Maharashtra',
+    //     //     'MZ' => 'Mizoram',
+    //     //     'DL' => 'New Delhi',
+    //     //     'DRH' => 'drhth', // Assuming 'drhth' is a valid state name placeholder
+    //     //     'TRY' => 'trytr', // Assuming 'trytr' is a valid state name placeholder
+    //     // ];
+
+
+
+    //     // $totalExpenses = [];
+    //     // $totalSales = [];
+
+    //     if ($fromDate && $toDate || $monthName) {
+    //         // Fetch Expense Data
+    //         $ExpenseFareReports = UserExpenseOtherRecords::with('MonthlyExpense')
+    //             ->where('is_submitted', 1)
+    //             ->where('is_verified', 1);
+    //             // ->where('status', 1);
+
+    //         if (!$monthName) {
+    //             if ($fromDate) {
+    //                 $ExpenseFareReports->whereDate('expense_date', '>=', $fromDate);
+    //             }
+
+    //             if ($toDate) {
+    //                 $ExpenseFareReports->whereDate('expense_date', '<=', $toDate);
+    //             }
+    //         }
+    //         if ($monthName) {
+    //             $ExpenseFareReports->whereMonth('expense_date', $month)->whereYear('expense_date', $year);
+    //         }
+
+    //         $ExpenseFareReports = $ExpenseFareReports->get();
+    //         $monthlyExpenses = $ExpenseFareReports->pluck('MonthlyExpense')->flatten();
+
+    //         // Group expenses by state
+    //         $groupedByStateExpenses = $monthlyExpenses->groupBy(function ($expense) use ($stateMap) {
+    //             return $expense->state && isset($stateMap[$expense->state->short]) 
+    //                 ? $stateMap[$expense->state->short] 
+    //                 : 'Unknown';
+    //         });
+
+    //         $expenseData = [];
+    //         foreach ($groupedByStateExpenses as $stateName => $expenses) {
+    //             $expenseData[$stateName] = $expenses->sum('fare_amount');
+    //         }
+    //         // $expenseData = [
+    //         //     'AP' => 35564, // Andhra Pradesh
+    //         //     'AR' => 4345,  // Arunachal Pradesh
+    //         //     'AS' => 554,  // Assam
+    //         //     'BR' => 45445, // Bihar
+    //         //     'CG' => 454445,  // Chhattisgarh
+    //         //     'GA' => 4544,  // Goa
+    //         //     'GJ' => 4545,  // Gujarat
+    //         //     'HR' => 45, // Haryana
+    //         //     'HP' => 45, // Himachal Pradesh
+    //         //     'JH' => 54,  // Jharkhand
+    //         //     'MP' => 783,  // Madhya Pradesh
+    //         //     'MH' => 63, // Maharashtra
+    //         //     'MZ' => 787,  // Mizoram
+    //         //     'DL' => 7877, // New Delhi
+    //         //     'DRH' => 787, // drhth (placeholder)
+    //         //     'TRY' => 5545, // trytr (placeholder)
+    //         // ];
+
+    //         // Fetch Sales Data
+    //         $salesQuery = Sales::query();
+    //         if (!$monthName) {
+    //             if ($fromDate) {
+    //                 $salesQuery->whereDate('date_of_sales', '>=', $fromDate);
+    //             }
+    //             if ($toDate) {
+    //                 $salesQuery->whereDate('date_of_sales', '<=', $toDate);
+    //             }
+    //         }
+            
+    //         if ($monthName) {
+    //             $salesQuery->whereMonth('date_of_sales', $month)->whereYear('date_of_sales', $year);
+    //         }
+    //         $sales = $salesQuery->get();
+
+    //         // Group sales by state
+    //         $groupedByStateSales = $sales->groupBy(function ($sale) use ($stateMap) {
+    //             return $stateMap[$sale->state_id] ?? 'Unknown';
+    //         });
+
+    //         $salesData = [];
+    //         foreach ($groupedByStateSales as $stateName => $salesGroup) {
+    //             $salesData[$stateName] = $salesGroup->sum('sales_amount');
+    //         }
+    //         // $salesData = [
+    //         //     'AP' => 105000, // Andhra Pradesh
+    //         //     'AR' => 98000,  // Arunachal Pradesh
+    //         //     'AS' => 87000,  // Assam
+    //         //     'BR' => 112000, // Bihar
+    //         //     'CG' => 75000,  // Chhattisgarh
+    //         //     'GA' => 45000,  // Goa
+    //         //     'GJ' => 95000,  // Gujarat
+    //         //     'HR' => 123000, // Haryana
+    //         //     'HP' => 129000, // Himachal Pradesh
+    //         //     'JH' => 32500,  // Jharkhand
+    //         //     'MP' => 88000,  // Madhya Pradesh
+    //         //     'MH' => 115000, // Maharashtra
+    //         //     'MZ' => 78500,  // Mizoram
+    //         //     'DL' => 102000, // New Delhi
+    //         //     'DRH' => 48000, // drhth (placeholder)
+    //         //     'TRY' => 67000, // trytr (placeholder)
+    //         // ];
+
+    //         // Prepare chart data
+    //         $totalExpenses = [];
+    //         $totalSales = [];
+    //         foreach ($stateNames as $shortName) {
+    //             $state = $stateMap[$shortName] ?? 'Unknown';
+    //             $totalExpenses[] = $expenseData[$state] ?? 0;
+    //             $totalSales[] = $salesData[$state] ?? 0;
+    //         }
+
+    //         // foreach ($stateNames as $shortName) {
+    //         //     $totalExpenses[] = $expenseData[$shortName] ?? 0; // Use short name directly
+    //         //     $totalSales[] = $salesData[$shortName] ?? 0;     // Use short name directly
+    //         // }
+    //     }
+
+    //     // Pass data to view
+    //     return view('dash.SalesExpenses.SEAnalysis.index', compact('title', 'fromDate', 'toDate', 'monthName','stateNames', 'totalExpenses', 'totalSales','print_data'));
+    // }
+
+    // above old function  below new function by avinash
     public function SEAnalysis(Request $request)
     {
         $title = 'Sales And Expense Analysis';
-
-        // Validate the inputs
+    
+        // Validate input
         $request->validate([
             'fromDate' => 'nullable|date',
             'toDate' => 'nullable|date',
             'monthName' => 'nullable|date_format:Y-m|required_if:fromDate,toDate,NULL',
         ]);
-        
+    
         $monthName = $request->monthName;
-
-        // // Extract month and year from the input string (e.g., "2024-09")
-        $month = (int)substr($monthName, 5, 2); // Extract month (09)
-        $year = (int)substr($monthName, 0, 4); // Extract year (2024)
-
-        // Retrieve input data
+        $month = $monthName ? (int)substr($monthName, 5, 2) : null;
+        $year = $monthName ? (int)substr($monthName, 0, 4) : null;
+    
         $fromDate = $request->input('fromDate');
         $toDate = $request->input('toDate');
-        $print_data =[
+    
+        $print_data = [
             'monthName' => $monthName,
             'fromDate' => $fromDate,
             'toDate' => $toDate,
         ];
+    
         if ((!$fromDate && !$toDate) && !$monthName) {
             return view('dash.SalesExpenses.SEAnalysis.index', compact('title'));
         }
-        // Retrieve and sort states by short name
+    
+        // Fetch state names and mapping
         $states = DB::table('states')->orderBy('short', 'ASC')->get();
-        $stateNames = $states->pluck('short')->toArray();
-        $stateMap = $states->pluck('name', 'short')->toArray();
-        // Fake data for testing
-        // State Names
-        // $stateNames = [
-        //     'AP', 'AR', 'AS', 'BR', 'CG', 'GA', 'GJ', 
-        //     'HR', 'HP', 'JH', 'MP', 'MH', 'MZ', 'DL', 
-        //     'DRH', 'TRY'
-        // ];
-        //         // State Map
-        // $stateMap = [
-        //     'AP' => 'Andhra Pradesh',
-        //     'AR' => 'Arunachal Pradesh',
-        //     'AS' => 'Assam',
-        //     'BR' => 'Bihar',
-        //     'CG' => 'Chhattisgarh',
-        //     'GA' => 'Goa',
-        //     'GJ' => 'Gujarat',
-        //     'HR' => 'Haryana',
-        //     'HP' => 'Himachal Pradesh',
-        //     'JH' => 'Jharkhand',
-        //     'MP' => 'Madhya Pradesh',
-        //     'MH' => 'Maharashtra',
-        //     'MZ' => 'Mizoram',
-        //     'DL' => 'New Delhi',
-        //     'DRH' => 'drhth', // Assuming 'drhth' is a valid state name placeholder
-        //     'TRY' => 'trytr', // Assuming 'trytr' is a valid state name placeholder
-        // ];
+       $stateNames = $states->pluck('short')->toArray();
+       $stateMap = $states->pluck('name', 'short')->toArray();
 
 
-
-        // $totalExpenses = [];
-        // $totalSales = [];
-
+    
+        $totalExpenses = [];
+        $totalSales = [];
+        $salesExpenseRatio = [];
+        $averageRatio = 0;
+    
         if ($fromDate && $toDate || $monthName) {
-            // Fetch Expense Data
+            // ------------------ EXPENSES ------------------
             $ExpenseFareReports = UserExpenseOtherRecords::with('MonthlyExpense')
                 ->where('is_submitted', 1)
                 ->where('is_verified', 1);
-                // ->where('status', 1);
-
+    
             if (!$monthName) {
                 if ($fromDate) {
                     $ExpenseFareReports->whereDate('expense_date', '>=', $fromDate);
                 }
-
                 if ($toDate) {
                     $ExpenseFareReports->whereDate('expense_date', '<=', $toDate);
                 }
+            } else {
+                $ExpenseFareReports->whereMonth('expense_date', $month)
+                    ->whereYear('expense_date', $year);
             }
-            if ($monthName) {
-                $ExpenseFareReports->whereMonth('expense_date', $month)->whereYear('expense_date', $year);
-            }
-
+    
             $ExpenseFareReports = $ExpenseFareReports->get();
             $monthlyExpenses = $ExpenseFareReports->pluck('MonthlyExpense')->flatten();
-
-            // Group expenses by state
+    
             $groupedByStateExpenses = $monthlyExpenses->groupBy(function ($expense) use ($stateMap) {
                 return $expense->state && isset($stateMap[$expense->state->short]) 
                     ? $stateMap[$expense->state->short] 
                     : 'Unknown';
             });
-
+    
             $expenseData = [];
             foreach ($groupedByStateExpenses as $stateName => $expenses) {
                 $expenseData[$stateName] = $expenses->sum('fare_amount');
             }
-            // $expenseData = [
-            //     'AP' => 35564, // Andhra Pradesh
-            //     'AR' => 4345,  // Arunachal Pradesh
-            //     'AS' => 554,  // Assam
-            //     'BR' => 45445, // Bihar
-            //     'CG' => 454445,  // Chhattisgarh
-            //     'GA' => 4544,  // Goa
-            //     'GJ' => 4545,  // Gujarat
-            //     'HR' => 45, // Haryana
-            //     'HP' => 45, // Himachal Pradesh
-            //     'JH' => 54,  // Jharkhand
-            //     'MP' => 783,  // Madhya Pradesh
-            //     'MH' => 63, // Maharashtra
-            //     'MZ' => 787,  // Mizoram
-            //     'DL' => 7877, // New Delhi
-            //     'DRH' => 787, // drhth (placeholder)
-            //     'TRY' => 5545, // trytr (placeholder)
-            // ];
-
-            // Fetch Sales Data
+    
+            // ------------------ SALES ------------------
             $salesQuery = Sales::query();
+    
             if (!$monthName) {
                 if ($fromDate) {
                     $salesQuery->whereDate('date_of_sales', '>=', $fromDate);
@@ -638,59 +775,53 @@ class SalesExpensesController extends Controller
                 if ($toDate) {
                     $salesQuery->whereDate('date_of_sales', '<=', $toDate);
                 }
+            } else {
+                $salesQuery->whereMonth('date_of_sales', $month)
+                    ->whereYear('date_of_sales', $year);
             }
-            
-            if ($monthName) {
-                $salesQuery->whereMonth('date_of_sales', $month)->whereYear('date_of_sales', $year);
-            }
+    
             $sales = $salesQuery->get();
-
-            // Group sales by state
+    
             $groupedByStateSales = $sales->groupBy(function ($sale) use ($stateMap) {
                 return $stateMap[$sale->state_id] ?? 'Unknown';
             });
-
+    
             $salesData = [];
             foreach ($groupedByStateSales as $stateName => $salesGroup) {
                 $salesData[$stateName] = $salesGroup->sum('sales_amount');
             }
-            // $salesData = [
-            //     'AP' => 105000, // Andhra Pradesh
-            //     'AR' => 98000,  // Arunachal Pradesh
-            //     'AS' => 87000,  // Assam
-            //     'BR' => 112000, // Bihar
-            //     'CG' => 75000,  // Chhattisgarh
-            //     'GA' => 45000,  // Goa
-            //     'GJ' => 95000,  // Gujarat
-            //     'HR' => 123000, // Haryana
-            //     'HP' => 129000, // Himachal Pradesh
-            //     'JH' => 32500,  // Jharkhand
-            //     'MP' => 88000,  // Madhya Pradesh
-            //     'MH' => 115000, // Maharashtra
-            //     'MZ' => 78500,  // Mizoram
-            //     'DL' => 102000, // New Delhi
-            //     'DRH' => 48000, // drhth (placeholder)
-            //     'TRY' => 67000, // trytr (placeholder)
-            // ];
-
-            // Prepare chart data
-            $totalExpenses = [];
-            $totalSales = [];
+            
+    
+            // ------------------ AGGREGATE BY STATE ------------------
             foreach ($stateNames as $shortName) {
                 $state = $stateMap[$shortName] ?? 'Unknown';
-                $totalExpenses[] = $expenseData[$state] ?? 0;
-                $totalSales[] = $salesData[$state] ?? 0;
+                $totalExpense = $expenseData[$state] ?? 0;
+                $totalSale = $salesData[$state] ?? 0;
+    
+                $totalExpenses[] = $totalExpense;
+                $totalSales[] = $totalSale;
+    
+                // Calculate sales-expense ratio as a percentage
+                $ratio = ($totalExpense > 0) ? round(($totalSale / $totalExpense) * 100, 2) : 0;
+                $salesExpenseRatio[] = $ratio;
             }
-
-            // foreach ($stateNames as $shortName) {
-            //     $totalExpenses[] = $expenseData[$shortName] ?? 0; // Use short name directly
-            //     $totalSales[] = $salesData[$shortName] ?? 0;     // Use short name directly
-            // }
+    
+            // ------------------ AVERAGE RATIO ------------------
+            $nonZeroRatios = array_filter($salesExpenseRatio, fn($val) => $val > 0);
+            if (count($nonZeroRatios) > 0) {
+                $averageRatio = round(array_sum($nonZeroRatios) / count($nonZeroRatios), 2);
+            }
         }
-
-        // Pass data to view
-        return view('dash.SalesExpenses.SEAnalysis.index', compact('title', 'fromDate', 'toDate', 'monthName','stateNames', 'totalExpenses', 'totalSales','print_data'));
+    
+        // ------------------ RETURN VIEW ------------------
+        return view('dash.SalesExpenses.SEAnalysis.index', compact(
+            'title', 'fromDate', 'toDate', 'monthName', 'stateNames',
+            'totalExpenses', 'totalSales', 'print_data',
+            'salesExpenseRatio', 'averageRatio'
+        ));
     }
+    
+
 
     public function SEAnalysisPrint(Request $request)
     {

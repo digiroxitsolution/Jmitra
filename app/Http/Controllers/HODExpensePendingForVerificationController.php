@@ -95,7 +95,7 @@ class HODExpensePendingForVerificationController extends Controller
 
 
 
-        $monthly_expenses = MonthlyExpense::with('monthlyExpenseHistory')->where('user_id', $user_id)->where('expense_id', $expense_id)->whereMonth('expense_date', $expense_month)->whereYear('expense_date', $expense_year)->where('user_expense_other_records_id', $id)->get();
+       $monthly_expenses = MonthlyExpense::with('monthlyExpenseHistory','ExpenseTypeMaster')->where('user_id', $user_id)->where('expense_id', $expense_id)->whereMonth('expense_date', $expense_month)->whereYear('expense_date', $expense_year)->where('user_expense_other_records_id', $id)->get();
 
         if (!$monthly_expenses){
             return redirect()->route('pending_expense_verification.index')->with('success', 'Monthly Sales Not Found');

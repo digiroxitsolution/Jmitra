@@ -225,7 +225,7 @@
                                         <tbody>
 
                                             @can('monthly-pending-expense-edit')
-                                                <form
+                                                <form id="monthlyExpenseForm"
                                                     action="{{ route('pending_expense_verification_update.update', $pending_monthly_expenses->id) }}"
                                                     method="POST">
                                                     @csrf
@@ -937,7 +937,25 @@
                             <!-- <div class="row mb-4">
         <div class="col-lg-6 col-12 fw-bold">Signature of Field Staff: __________ __________ __________</div>
         <div class="col-lg-6 col-12 fw-bold">Signature of Manager: __________ __________ __________</div>
-       </div> -->
+       </div> -->    
+      
+                            @if (!is_null($reasonof_update))
+                                <div class="row mb-3">
+                                    @foreach ($reasonof_update as $rup )
+                                    <div class="col">
+                                        <p class="text-muted mb-1">
+                                            <strong>Updated By:</strong>
+                                            {{ $rup->showUsers->name ?? 'N/A' }}
+                                        </p>
+                                        <p class="text-muted">
+                                            <strong>Reason for Update:</strong> {{ $rup->reason??''}}
+                                        </p>
+                                    </div>
+                                    @endforeach
+                                   
+                                </div>
+                            @endif
+
                             <div class="row mb-4">
                                 <div class="form-check">
                                     <input class="form-check-input me-2 ms-1" type="checkbox" value="1"
@@ -987,10 +1005,14 @@
                                     <button type="button" data-bs-toggle="modal" data-bs-target="#reasonOfReOpenModal"
                                         class="btn btn-warning text-white float-end ms-2">Re-Open</button>
                                 @endcan
-
+                                {{-- 
                                 @can('monthly-pending-expense-update')
                                     <button type="button" class="btn btn-info float-end ms-2 text-white"
                                         id="externalSubmitButton">Update</button>
+                                @endcan --}}
+                                @can('monthly-pending-expense-update')
+                                    <button type="button" class="btn btn-info float-end ms-2 text-white"
+                                        data-bs-toggle="modal" data-bs-target="#reasonOfUpdateModal">Update</button>
                                 @endcan
 
 
@@ -1051,13 +1073,47 @@
                             </div>
                         </div>
                     </div>
+
+                    <!--*******************
+ update reason modal start
+    *****************-->
+
+                    <div class="modal" tabindex="-1" id="reasonOfUpdateModal">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Reason for Update</h5>
+                                    <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="update_reason" class="form-label">Please provide a reason for the
+                                            update:</label>
+                                        <textarea class="form-control" id="update_reason" rows="3" name="update_reason_text" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="confirmUpdateSubmit">Submit
+                                        Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--*******************
+     update reason modal end
+    *****************-->
                     <!--*******************
      Submission Promising End
     *****************-->
                     @can('monthly-pending-expense-reject')
                         <!--*******************
-             Reason of Rejected Start
-            *****************-->
+                             Reason of Rejected Start
+                            *****************-->
                         <div class="modal" tabindex="-1" id="reasonOfRejectedModal">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -1088,8 +1144,8 @@
                             </div>
                         </div>
                         <!--*******************
-             Reason of Rejected End
-            *****************-->
+                             Reason of Rejected End
+                            *****************-->
                     @endcan
                     <!--*******************
      Reason of Re-Open Start
@@ -1181,12 +1237,109 @@
             window.addEventListener('resize', updateFakeScrollbar);
             window.addEventListener('load', updateFakeScrollbar);
         </script>
-
+        {{-- // new script from avinahs start  --}}
         <script>
-            document.getElementById('externalSubmitButton').addEventListener('click', function() {
-                // Trigger the submit button inside the form
-                document.getElementById('hiddenSubmitButton').click();
+            document.addEventListener('DOMContentLoaded', function() {
+                // Updated: Select the main form by its new ID
+                const mainForm = document.getElementById('monthlyExpenseForm');
+                const updateButton = document.querySelector('[data-bs-target="#reasonOfUpdateModal"]');
+                const updateReasonTextarea = document.getElementById('update_reason');
+                const reasonOfUpdateModal = document.getElementById('reasonOfUpdateModal');
+
+                console.log('Debugging Elements (on DOMContentLoaded):');
+                console.log('mainForm:', mainForm); // Check if form is now found
+                console.log('updateButton:', updateButton);
+                console.log('updateReasonTextarea:', updateReasonTextarea);
+                console.log('reasonOfUpdateModal:', reasonOfUpdateModal);
+
+                if (updateButton && updateReasonTextarea && mainForm && reasonOfUpdateModal) {
+                    console.log(
+                        'All essential elements for update functionality found. Setting up delegated event listener...'
+                    );
+
+                    reasonOfUpdateModal.addEventListener('click', function(event) {
+                        const clickedSubmitButton = event.target.closest('#confirmUpdateSubmit');
+
+                        if (clickedSubmitButton) {
+                            console.log('Submit Update button clicked via delegation (using closest)!');
+
+                            const reason = updateReasonTextarea.value.trim();
+
+                            if (reason === '') {
+                                alert('Please provide a reason for the update.');
+                                return;
+                            }
+
+                            // Create a hidden input to hold the reason and append it to the form
+                            let hiddenReasonInput = document.createElement('input');
+                            hiddenReasonInput.type = 'hidden';
+                            hiddenReasonInput.name = 'update_reason';
+                            hiddenReasonInput.value = reason;
+                            mainForm.appendChild(hiddenReasonInput);
+
+                            console.log('Reason added to form as hidden input:', reason);
+                            mainForm.submit();
+                            console.log('Main form submitted.');
+
+                            const modalInstance = bootstrap.Modal.getInstance(reasonOfUpdateModal);
+                            if (modalInstance) {
+                                modalInstance.hide();
+                                console.log('Modal closed.');
+                            }
+                        }
+                    });
+
+                } else {
+                    console.error(
+                        'ERROR: One or more essential elements for the update functionality were NOT found on page load. Check the HTML IDs and selectors.'
+                    );
+                    console.log('Final check: mainForm:', mainForm);
+                    console.log('Final check: updateButton:', updateButton);
+                    console.log('Final check: updateReasonTextarea:', updateReasonTextarea);
+                    console.log('Final check: reasonOfUpdateModal:', reasonOfUpdateModal);
+                }
+
+                // --- Existing checkbox and submit button logic (adjusted for externalSubmissionButton) ---
+                const checkbox = document.getElementById('accept_policy');
+                // Assuming 'externalSubmissionButton' is the ID of the button you want to control with the checkbox.
+                // If you have multiple buttons for submission/verification, clarify which one this controls.
+                const externalSubmissionButton = document.getElementById('externalSubmissionButton');
+                // If you are instead controlling the submissionPromisiingModal button, use this:
+                // const verifySubmitButton = document.querySelector('[data-bs-target="#submissionPromisiingModal"]');
+
+
+                // Ensure the button variable is the correct one for the checkbox logic
+                const buttonToControl = externalSubmissionButton; // Or verifySubmitButton if that's the one
+
+                if (checkbox && buttonToControl) {
+                    toggleSubmitButtonState(); // Call on initial load
+
+                    checkbox.addEventListener('change', function() {
+                        toggleSubmitButtonState();
+                    });
+
+                    function toggleSubmitButtonState() {
+                        const isSubmitted = parseInt("{{ $pending_monthly_expenses->is_submitted ?? 0 }}");
+                        if (!checkbox.checked || isSubmitted === 1) {
+                            buttonToControl.disabled = true;
+                        } else {
+                            buttonToControl.disabled = false;
+                        }
+                    }
+                } else {
+                    console.warn('Checkbox or button for accept_policy not found. Check their IDs.');
+                }
             });
+        </script>
+
+        {{-- 
+// new script from avinash end --}}
+        {{-- <script>
+            // comment by avinash
+            // document.getElementById('externalSubmitButton').addEventListener('click', function() {
+            //     // Trigger the submit button inside the form
+            //     document.getElementById('hiddenSubmitButton').click();
+            // });
             document.addEventListener('DOMContentLoaded', function() {
                 const checkbox = document.getElementById('accept_policy');
                 const submitButton = document.getElementById('externalSubmissionButton');
@@ -1209,7 +1362,7 @@
                     }
                 }
             });
-        </script>
+        </script> --}}
 
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
@@ -1708,40 +1861,37 @@
                 });
             });
         </script>
-      
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const allowedDAValues = @json([
-                $policySetting['location_da'],
-                $policySetting['ex_location_da'],
-                $policySetting['outstation_da']
-            ]).map(Number); // Ensure numeric comparison
-    
-            const daInputs = document.querySelectorAll('input[name^="monthly_expense"][name$="[da_total]"]');
-    
-            daInputs.forEach(input => {
-                // Store the old value when the user focuses in
-                input.addEventListener('focus', function () {
-                    this.dataset.oldValue = this.value;
-                });
-    
-                // Validate on change
-                input.addEventListener('change', function () {
-                    const value = parseInt(this.value.trim());
-                    const isValid = allowedDAValues.includes(value);
-    
-                    if (!isValid && this.value !== '') {
-                        alert("Invalid value entered! Allowed values are: " + allowedDAValues.join(', '));
-                        this.value = this.dataset.oldValue || ''; // revert to old value or blank
-                        this.focus();
-                    }
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const allowedDAValues = @json([$policySetting['location_da'], $policySetting['ex_location_da'], $policySetting['outstation_da']]).map(Number); // Ensure numeric comparison
+
+                const daInputs = document.querySelectorAll('input[name^="monthly_expense"][name$="[da_total]"]');
+
+                daInputs.forEach(input => {
+                    // Store the old value when the user focuses in
+                    input.addEventListener('focus', function() {
+                        this.dataset.oldValue = this.value;
+                    });
+
+                    // Validate on change
+                    input.addEventListener('change', function() {
+                        const value = parseInt(this.value.trim());
+                        const isValid = allowedDAValues.includes(value);
+
+                        if (!isValid && this.value !== '') {
+                            alert("Invalid value entered! Allowed values are: " + allowedDAValues.join(
+                                ', '));
+                            this.value = this.dataset.oldValue || ''; // revert to old value or blank
+                            this.focus();
+                        }
+                    });
                 });
             });
-        });
-    </script>
-    
-    
-        
+        </script>
+
+
+
 
 </body>
 

@@ -90,12 +90,6 @@ class StatusOfExpensesController extends Controller
 
         $usser = User::find($user_idd);
 
-
-
-
-        
-        
-
         $formatter = new NumberFormatter('en_IN', NumberFormatter::SPELLOUT);
 
         // Fetch records for the specified month and year

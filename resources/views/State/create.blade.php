@@ -17,6 +17,15 @@
 									<label for="short_name" class="form-label">State Short Name<span class="text-danger">*</span>:</label>
 									<input class="form-control" id="short_name" name="short_name" rows="5">
 								</div>
+								<div class="col-12 mb-3">
+									<label for="zone_id" class="form-label">Select Zone <span class="text-danger">*</span>:</label>
+									<select class="form-select" id="zone_id" name="zone_id" required>
+									  <option value="">-- Select Zone --</option>
+									  @foreach($zones as $zone)
+										<option value="{{ $zone->id }}">{{ $zone->zone_name }}</option>
+									  @endforeach
+									</select>
+								  </div>
 							</div>
 						  </form>
 						</div>

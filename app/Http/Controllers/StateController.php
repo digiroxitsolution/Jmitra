@@ -21,8 +21,9 @@ class StateController extends Controller
     {
         $title = "State Master";
 
-      $states = State::with('Zone:id,zone_name')->get();
-        return view('State.index', compact('title', 'states'));
+        $zones =  zone::get();
+        $states = State::with('Zone:id,zone_name')->get();
+        return view('State.index', compact('title', 'states', 'zones'));
     }
 
     // Show the form for creating a new resource.
@@ -33,7 +34,8 @@ class StateController extends Controller
 
     // Store a newly created resource in storage.
     public function store(Request $request)
-    {
+    { 
+       
         try {
             // Validate incoming request
             $request->validate([
@@ -46,6 +48,7 @@ class StateController extends Controller
             State::create([
                 'name' => $request->state_name,
                 'short' => $request->short_name,
+                'zone_id'=>$request->zone_id,
 
             ]);
 
@@ -111,6 +114,7 @@ class StateController extends Controller
             $states->update([
                 'name' => $request->name,
                 'short' => $request->short,
+                'zone_id'=>$request->zone_id,
 
             ]);
 

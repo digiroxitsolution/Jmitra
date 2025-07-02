@@ -13,6 +13,7 @@ class State extends Model
         'id',
         'name',
         'short',
+        'zone_id',
         'created_at',
         'updated_at',
     ];

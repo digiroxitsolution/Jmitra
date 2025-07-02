@@ -19,6 +19,7 @@ use App\Models\OtherExpenseMaster;
 use App\Models\RejectionMaster;
 use App\Models\ReOpenMaster;
 use App\Models\Sales;
+use App\Models\State;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 // use Dompdf\Dompdf;
@@ -38,132 +39,266 @@ class SalesExpensesController extends Controller
         }
         return $a;
     }
+    // public function SalesExpenses(Request $request)
+    // {
+    //     $title = 'Sale Expenses';
+
+    //     // Validate the inputs
+    //     $request->validate([
+    //         'fromDate' => 'nullable|date',
+    //         'toDate' => 'nullable|date',
+    //         'monthName' => 'nullable|date_format:Y-m|required_if:fromDate,toDate,NULL',
+    //     ]);
+
+    //     $monthName = $request->monthName;
+
+    //     // Extract month and year from the input string (e.g., "2024-09")
+    //     $month = (int)substr($monthName, 5, 2); // Extract month (09)
+    //     $year = (int)substr($monthName, 0, 4); // Extract year (2024)
+
+    //     // Retrieve input data
+    //     $fromDate = $request->input('fromDate');
+    //     $toDate = $request->input('toDate');
+    //     $print_data = [
+    //         'monthName' => $monthName,
+    //         'fromDate' => $fromDate,
+    //         'toDate' => $toDate,
+    //     ];
+    //     if ((!$fromDate && !$toDate) && !$monthName) {
+    //         return view('dash.SalesExpenses.SalesExpense.index', compact('title'));
+    //     }
+
+    //     // Retrieve and sort states by short name
+    //     $states = DB::table('states')->orderBy('short', 'ASC')->get();
+    //     $stateNames = $states->pluck('short')->toArray();
+    //     $stateMap = $states->pluck('name', 'short')->toArray();
+
+    //     if ($fromDate || $toDate || $monthName) {
+    //         // Fetch Expense Data
+    //         $ExpenseFareReports = UserExpenseOtherRecords::with('MonthlyExpense')
+    //             ->where('is_submitted', 1)
+    //             ->where('is_verified', 1);
+    //         // ->where('status', 1);
+    //         if (!$monthName) {
+
+    //             if ($fromDate) {
+    //                 $ExpenseFareReports->whereDate('expense_date', '>=', $fromDate);
+    //             }
+    //             if ($toDate) {
+    //                 $ExpenseFareReports->whereDate('expense_date', '<=', $toDate);
+    //             }
+    //         }
+    //         if ($monthName) {
+    //             $ExpenseFareReports->whereMonth('expense_date', $month)->whereYear('expense_date', $year);
+    //         }
+
+    //         $ExpenseFareReports = $ExpenseFareReports->get();
+    //         $monthlyExpenses = $ExpenseFareReports->pluck('MonthlyExpense')->flatten();
+
+    //         // Group expenses by state
+    //         $groupedByStateExpenses = $monthlyExpenses->groupBy(function ($expense) use ($stateMap) {
+    //             return $expense->state && isset($stateMap[$expense->state->short])
+    //                 ? $stateMap[$expense->state->short]
+    //                 : 'Unknown';
+    //         });
+
+    //         // Fetch Sales Data
+    //         $salesQuery = Sales::query();
+    //         if (!$monthName) {
+    //             if ($fromDate) {
+    //                 $salesQuery->whereDate('date_of_sales', '>=', $fromDate);
+    //             }
+    //             if ($toDate) {
+    //                 $salesQuery->whereDate('date_of_sales', '<=', $toDate);
+    //             }
+    //         }
+
+
+    //         if ($monthName) {
+    //             $salesQuery->whereMonth('date_of_sales', $month)->whereYear('date_of_sales', $year);
+    //         }
+    //         $sales = $salesQuery->get();
+
+    //         // Group sales by state
+    //         $groupedByStateSales = $sales->groupBy(function ($sale) use ($stateMap) {
+    //             return $sale->state && isset($stateMap[$sale->state->short])
+    //                 ? $stateMap[$sale->state->short]
+    //                 : 'Unknown';
+    //         });
+
+    //         // Merge sales and expenses data
+    //         $combined_sales_expenses = [];
+    //         foreach ($stateNames as $state) {
+    //             // Get the short state name directly
+    //             $stateName = $state;  // Using the short name directly
+
+    //             // Get expenses and sales for the state
+    //             $expense = $groupedByStateExpenses[$stateMap[$state]] ?? collect([]);
+    //             $sale = $groupedByStateSales[$stateMap[$state]] ?? collect([]);
+
+    //             // Calculate the sales expense ratio
+    //             $salesAmount = $sale->sum('sales_amount');
+    //             $expenseAmount = $expense->sum('fare_amount');
+
+    //             // Initialize the sales-expense ratio
+    //             if ($expenseAmount > 0) {
+    //                 // Calculate the sales-expense ratio
+    //                 $sales_expense_ratio = $salesAmount / $expenseAmount; // Ratio as a number
+    //                 $sales_expense_ratio = is_numeric($sales_expense_ratio) ? number_format($sales_expense_ratio, 2) . "%" : $sales_expense_ratio;
+    //             } elseif ($salesAmount > 0) {
+    //                 // If no expenses but sales are present, return "No Expenses"
+    //                 $sales_expense_ratio = "100%";
+    //             } else {
+    //                 // If both sales and expenses are zero, return "0"
+    //                 $sales_expense_ratio = "0";
+    //             }
+
+    //             // Store the combined data using the short name
+    //             $combined_sales_expenses[$stateName] = [
+    //                 'expenses' => $expenseAmount,
+    //                 'sales' => $salesAmount,
+    //                 'sales_expense_ratio' => $sales_expense_ratio,
+    //             ];
+    //         }
+    //         // dd($combined_sales_expenses);
+
+    //         return view('dash.SalesExpenses.SalesExpense.index', compact('title', 'fromDate', 'toDate', 'monthName', 'groupedByStateExpenses', 'groupedByStateSales', 'combined_sales_expenses', 'print_data'));
+    //     }
+    // }
     public function SalesExpenses(Request $request)
     {
         $title = 'Sale Expenses';
-
-        // Validate the inputs
+    
         $request->validate([
             'fromDate' => 'nullable|date',
             'toDate' => 'nullable|date',
             'monthName' => 'nullable|date_format:Y-m|required_if:fromDate,toDate,NULL',
         ]);
-
+    
         $monthName = $request->monthName;
-
-        // Extract month and year from the input string (e.g., "2024-09")
-        $month = (int)substr($monthName, 5, 2); // Extract month (09)
-        $year = (int)substr($monthName, 0, 4); // Extract year (2024)
-
-        // Retrieve input data
+        $month = $monthName ? (int)substr($monthName, 5, 2) : null;
+        $year = $monthName ? (int)substr($monthName, 0, 4) : null;
+    
         $fromDate = $request->input('fromDate');
         $toDate = $request->input('toDate');
+    
         $print_data = [
             'monthName' => $monthName,
             'fromDate' => $fromDate,
             'toDate' => $toDate,
         ];
+    
+        // Return view with no table if no filters are selected
         if ((!$fromDate && !$toDate) && !$monthName) {
             return view('dash.SalesExpenses.SalesExpense.index', compact('title'));
         }
-
-        // Retrieve and sort states by short name
-        $states = DB::table('states')->orderBy('short', 'ASC')->get();
-        $stateNames = $states->pluck('short')->toArray();
-        $stateMap = $states->pluck('name', 'short')->toArray();
-
-        if ($fromDate || $toDate || $monthName) {
-            // Fetch Expense Data
-            $ExpenseFareReports = UserExpenseOtherRecords::with('MonthlyExpense')
-                ->where('is_submitted', 1)
-                ->where('is_verified', 1);
-            // ->where('status', 1);
-            if (!$monthName) {
-
-                if ($fromDate) {
-                    $ExpenseFareReports->whereDate('expense_date', '>=', $fromDate);
-                }
-                if ($toDate) {
-                    $ExpenseFareReports->whereDate('expense_date', '<=', $toDate);
-                }
+    
+        // Fetch states with zone relation
+        $states = State::with('zone')->orderBy('short', 'ASC')->get();
+    
+        // Expenses
+        $ExpenseFareReports = UserExpenseOtherRecords::with('MonthlyExpense')
+            ->where('is_submitted', 1)
+            ->where('is_verified', 1);
+    
+        if (!$monthName) {
+            if ($fromDate) $ExpenseFareReports->whereDate('expense_date', '>=', $fromDate);
+            if ($toDate) $ExpenseFareReports->whereDate('expense_date', '<=', $toDate);
+        } else {
+            $ExpenseFareReports->whereMonth('expense_date', $month)->whereYear('expense_date', $year);
+        }
+    
+        $ExpenseFareReports = $ExpenseFareReports->get();
+        $monthlyExpenses = $ExpenseFareReports->pluck('MonthlyExpense')->flatten();
+    
+        // Group by state short code
+        $groupedByStateExpenses = $monthlyExpenses->groupBy(function ($expense) {
+            return $expense->state?->short ?? 'Unknown';
+        });
+    
+        // Sales
+        $salesQuery = Sales::with('state');
+        if (!$monthName) {
+            if ($fromDate) $salesQuery->whereDate('date_of_sales', '>=', $fromDate);
+            if ($toDate) $salesQuery->whereDate('date_of_sales', '<=', $toDate);
+        } else {
+            $salesQuery->whereMonth('date_of_sales', $month)->whereYear('date_of_sales', $year);
+        }
+    
+        $sales = $salesQuery->get();
+        $groupedByStateSales = $sales->groupBy(function ($sale) {
+            return $sale->state?->short ?? 'Unknown';
+        });
+    
+        // Grouping for view
+        $groupedData = [];
+        $grandExpenses = $grandSales = 0;
+    
+        foreach ($states as $state) {
+            $short = $state->short;
+            $stateName = $state->name;
+            $zoneName = $state->zone->zone_name ?? 'Unknown';
+    
+            $expense = $groupedByStateExpenses[$short] ?? collect([]);
+            $sale = $groupedByStateSales[$short] ?? collect([]);
+    
+            $expenseAmount = $expense->sum('fare_amount');
+            $salesAmount = $sale->sum('sales_amount');
+    
+            // Corrected ratio logic
+            if ($expenseAmount > 0) {
+                $ratio = number_format(($salesAmount / $expenseAmount) * 100, 2) . '%';
+            } elseif ($salesAmount > 0) {
+                $ratio = '0%'; // or use 'N/A'
+            } else {
+                $ratio = '0%';
             }
-            if ($monthName) {
-                $ExpenseFareReports->whereMonth('expense_date', $month)->whereYear('expense_date', $year);
-            }
-
-            $ExpenseFareReports = $ExpenseFareReports->get();
-            $monthlyExpenses = $ExpenseFareReports->pluck('MonthlyExpense')->flatten();
-
-            // Group expenses by state
-            $groupedByStateExpenses = $monthlyExpenses->groupBy(function ($expense) use ($stateMap) {
-                return $expense->state && isset($stateMap[$expense->state->short])
-                    ? $stateMap[$expense->state->short]
-                    : 'Unknown';
-            });
-
-            // Fetch Sales Data
-            $salesQuery = Sales::query();
-            if (!$monthName) {
-                if ($fromDate) {
-                    $salesQuery->whereDate('date_of_sales', '>=', $fromDate);
-                }
-                if ($toDate) {
-                    $salesQuery->whereDate('date_of_sales', '<=', $toDate);
-                }
-            }
-
-
-            if ($monthName) {
-                $salesQuery->whereMonth('date_of_sales', $month)->whereYear('date_of_sales', $year);
-            }
-            $sales = $salesQuery->get();
-
-            // Group sales by state
-            $groupedByStateSales = $sales->groupBy(function ($sale) use ($stateMap) {
-                return $sale->state && isset($stateMap[$sale->state->short])
-                    ? $stateMap[$sale->state->short]
-                    : 'Unknown';
-            });
-
-            // Merge sales and expenses data
-            $combined_sales_expenses = [];
-            foreach ($stateNames as $state) {
-                // Get the short state name directly
-                $stateName = $state;  // Using the short name directly
-
-                // Get expenses and sales for the state
-                $expense = $groupedByStateExpenses[$stateMap[$state]] ?? collect([]);
-                $sale = $groupedByStateSales[$stateMap[$state]] ?? collect([]);
-
-                // Calculate the sales expense ratio
-                $salesAmount = $sale->sum('sales_amount');
-                $expenseAmount = $expense->sum('fare_amount');
-
-                // Initialize the sales-expense ratio
-                if ($expenseAmount > 0) {
-                    // Calculate the sales-expense ratio
-                    $sales_expense_ratio = $salesAmount / $expenseAmount; // Ratio as a number
-                    $sales_expense_ratio = is_numeric($sales_expense_ratio) ? number_format($sales_expense_ratio, 2) . "%" : $sales_expense_ratio;
-                } elseif ($salesAmount > 0) {
-                    // If no expenses but sales are present, return "No Expenses"
-                    $sales_expense_ratio = "100%";
-                } else {
-                    // If both sales and expenses are zero, return "0"
-                    $sales_expense_ratio = "0";
-                }
-
-                // Store the combined data using the short name
-                $combined_sales_expenses[$stateName] = [
-                    'expenses' => $expenseAmount,
-                    'sales' => $salesAmount,
-                    'sales_expense_ratio' => $sales_expense_ratio,
+    
+            if (!isset($groupedData[$zoneName])) {
+                $groupedData[$zoneName] = [
+                    'states' => [],
+                    'totals' => ['expense' => 0, 'sales' => 0],
                 ];
             }
-            // dd($combined_sales_expenses);
-
-            return view('dash.SalesExpenses.SalesExpense.index', compact('title', 'fromDate', 'toDate', 'monthName', 'groupedByStateExpenses', 'groupedByStateSales', 'combined_sales_expenses', 'print_data'));
+    
+            $groupedData[$zoneName]['states'][] = [
+                'state' => $stateName,
+                'expense' => $expenseAmount,
+                'sales' => $salesAmount,
+                'ratio' => $ratio,
+            ];
+    
+            $groupedData[$zoneName]['totals']['expense'] += $expenseAmount;
+            $groupedData[$zoneName]['totals']['sales'] += $salesAmount;
+    
+            $grandExpenses += $expenseAmount;
+            $grandSales += $salesAmount;
         }
+    
+        if ($grandExpenses > 0) {
+            $grandRatio = number_format(($grandSales / $grandExpenses) * 100, 2) . '%';
+        } elseif ($grandSales > 0) {
+            $grandRatio = '∞%';
+        } else {
+            $grandRatio = '0%';
+        }
+    
+        return view('dash.SalesExpenses.SalesExpense.index', compact(
+            'title',
+            'fromDate',
+            'toDate',
+            'monthName',
+            'groupedData',
+            'grandExpenses',
+            'grandSales',
+            'grandRatio',
+            'print_data'
+        ));
     }
+    
+    
+    
+
     public function SalesExpensesPrint(Request $request)
     {
         $title = 'Sale Expenses';
@@ -795,7 +930,7 @@ class SalesExpensesController extends Controller
             if ($expenseAmount > 0) {
                 $ratio = round(($salesAmount / $expenseAmount) * 100, 2);
             } elseif ($salesAmount > 0) {
-                $ratio = 100.00;
+                $ratio = 0;
             } else {
                 $ratio = 0;
             }

@@ -16,7 +16,7 @@ class State extends Model
         'created_at',
         'updated_at',
     ];
-    
+
     // Relationship with IncidentReport
     public function City()
     {
@@ -33,4 +33,8 @@ class State extends Model
         return $this->hasMany(Attendance::class, 'user_id', 'id');
     }
 
+    public function Zone()
+    {
+        return $this->belongsTo(zone::class, 'zone_id', 'id');
+    }
 }

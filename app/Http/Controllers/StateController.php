@@ -11,7 +11,9 @@ use Hash;
 use App\Models\User;
 use App\Models\State;
 use App\Models\City;
+use App\Models\zone;
 use Illuminate\Validation\Rule;
+
 class StateController extends Controller
 {
     // Display a listing of the resource.
@@ -19,7 +21,7 @@ class StateController extends Controller
     {
         $title = "State Master";
 
-        $states = State::all();
+      $states = State::with('Zone:id,zone_name')->get();
         return view('State.index', compact('title', 'states'));
     }
 
@@ -37,14 +39,14 @@ class StateController extends Controller
             $request->validate([
                 'state_name' => 'required|string|max:255|unique:states,name',
                 'short_name' => 'required|string|max:255|unique:states,short',
-                
+
             ]);
 
             // Create a new state
             State::create([
                 'name' => $request->state_name,
                 'short' => $request->short_name,
-                
+
             ]);
 
             return response()->json(['message' => 'State Master created successfully!']);
@@ -86,7 +88,7 @@ class StateController extends Controller
 
             // Validate incoming request
             $request->validate([
-                
+
                 // 'name' => 'required|string|max:255|unique:states,name',
                 // 'short' => 'required|string|max:255|unique:states,short',
                 'name' => [
@@ -102,14 +104,14 @@ class StateController extends Controller
                     Rule::unique('states', 'short')->ignore($id),
                 ],
 
-                
+
             ]);
 
             // Update states details
             $states->update([
                 'name' => $request->name,
                 'short' => $request->short,
-                
+
             ]);
 
             return response()->json(['message' => 'State updated successfully']);

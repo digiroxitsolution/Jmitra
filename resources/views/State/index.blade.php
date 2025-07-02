@@ -29,6 +29,7 @@
 						      <th scope="col">S.No.</th>
 						      <th scope="col">State Name</th>
 						      <th scope="col">State In Short</th>
+							  <th scope="col">Zone Name</th>
 						      <th scope="col">Action</th>
 						    </tr>
 						  </thead>
@@ -38,7 +39,8 @@
                               <tr>
                                 <td>{{ ++$i }}</td>                                
                                 <td>{{ $state->name }}</td>   
-                                <td>{{ $state->short }}</td>                                
+                                <td>{{ $state->short }}</td>      
+								<td>{{ $state->Zone?->zone_name??'' }}</td>                                
                                 <td>
                                     <div class="d-flex">
                                     @can('state-edit')

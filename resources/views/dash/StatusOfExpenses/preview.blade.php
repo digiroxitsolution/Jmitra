@@ -41,7 +41,6 @@
 			
 			
 			<div class="row">
-				
 				<!--*******************
 					   Form Submit of Selected Month Start
 				*****************-->
@@ -50,7 +49,7 @@
 					  
 						<div class="card-header" style="background-color:#077fad; color:white;">
 						  <h4 class="" style="height: 50px;">Preview of {{ \Carbon\Carbon::parse($month)->format('F') }} Expenses
-
+				
 						  	<button id="download-pdf" class="btn btn-primary exclude-from-pdf">Download PDF</button>
 
 

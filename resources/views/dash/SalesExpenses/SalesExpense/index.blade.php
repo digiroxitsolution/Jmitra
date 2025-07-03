@@ -98,8 +98,8 @@
          *****************-->
 		
 
-@endsection
- --}}
+@endsection --}}
+
 
 @extends('layouts.main')
 @section('title', 'Sales Expenses | Jmitra & Co. Pvt. Ltd')
@@ -190,7 +190,7 @@
                                                 <td>{{ $row['state'] }}</td>
                                                 <td>Rs. {{ number_format($row['expense'], 2) }}</td>
                                                 <td>Rs. {{ number_format($row['sales'], 2) }}</td>
-                                                <td>{{ $row['ratio'] }}</td>
+                                                <td>{{ $row['ratio'] }} %</td>
                                             </tr>
                                         @endforeach
 
@@ -204,7 +204,7 @@
                                                     $e = $zoneData['totals']['expense'];
                                                     $s = $zoneData['totals']['sales'];
                                                     echo $e > 0
-                                                        ? number_format(($s / $e) * 100, 2) . '%'
+                                                        ? number_format(($s / $e) , 2) . '%'
                                                         : ($s > 0
                                                             ? 'N/A'
                                                             : '0%');
@@ -218,7 +218,7 @@
                                         <td>GRAND TOTAL</td>
                                         <td>Rs. {{ number_format($grandExpenses ?? 0, 2) }}</td>
                                         <td>Rs. {{ number_format($grandSales ?? 0, 2) }}</td>
-                                        <td>{{ $grandRatio ?? '0%' }}</td>
+                                        <td>{{ $grandRatio ?? '0%' }} %</td>
                                     </tr>
                                 </tbody>
                             </table>

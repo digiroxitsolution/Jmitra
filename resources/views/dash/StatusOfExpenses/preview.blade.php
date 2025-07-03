@@ -58,9 +58,14 @@
                     <div class="card-dialog card-dialog-centered card-fullscreen">
 
                         <div class="card-header" style="background-color:#077fad; color:white;">
-                          <h4 class="" style="height: 50px;"> {{ \Carbon\Carbon::parse($month)->format('F') }} Expense  Report
+                          {{-- <h4 class="" style="height: 50px;"> Monthly Expenses Report
                             <button id="download-pdf" class="btn btn-primary exclude-from-pdf">Download PDF</button>
-                          </h4>
+                          </h4> --}}
+                          <h4 class="d-flex justify-content-center align-items-center gap-3" style="height: 50px;">
+                            Monthly Expenses Report
+                            <button id="download-pdf" class="btn btn-primary exclude-from-pdf">Download PDF</button>
+                        </h4>
+                        
                         </div>
 
                         <div class="card-body">

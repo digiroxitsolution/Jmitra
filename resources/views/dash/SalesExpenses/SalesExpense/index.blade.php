@@ -204,7 +204,7 @@
                                                     $e = $zoneData['totals']['expense'];
                                                     $s = $zoneData['totals']['sales'];
                                                     echo $e > 0
-                                                        ? number_format(($s / $e) , 2) . '%'
+                                                        ? number_format(($e/$s) , 2) . '%'
                                                         : ($s > 0
                                                             ? 'N/A'
                                                             : '0%');

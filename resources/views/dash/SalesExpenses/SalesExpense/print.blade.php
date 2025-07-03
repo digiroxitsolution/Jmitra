@@ -14,7 +14,7 @@
                 <th style="border: 1px solid #dee2e6; padding: 8px; color:#ffffff;"> <strong>Sales</strong></th>
                 <th style="border: 1px solid #dee2e6; padding: 8px; color:#ffffff;"> <strong>S/E Ratio</strong></th>
             </tr>
-            @foreach($combined_sales_expenses as $state => $data)
+            @foreach ($combined_sales_expenses as $state => $data)
             <tr style="background-color: #c6dae1; font-size: 16px;">
                 <td style="border: 1px solid #ffffff; padding: 8px; color:#000000;"><b>{{ $state }}</b></td>
                 <td style="border: 1px solid #ffffff; padding: 8px; color:#000000;"><b>Rs. {{ number_format($data['expenses'] ?? 0, 2) }}</b></td>
@@ -35,19 +35,51 @@
 </html> --}}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Sales vs Expenses Report</title>
     <style>
-        body { font-family: sans-serif; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #dee2e6; padding: 8px; font-size: 14px; }
-        th { background-color: #049DD9; color: #fff; font-size: 16px; }
-        .zone-header { background-color: #c6dae1; font-weight: bold; }
-        .zone-total { background-color: #d1d1d1; font-weight: bold; }
-        .grand-total { background-color: #a9a9a9; color: #fff; font-weight: bold; }
+        body {
+            font-family: sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #049DD9;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .zone-header {
+            background-color: #c6dae1;
+            font-weight: bold;
+        }
+
+        .zone-total {
+            background-color: #d1d1d1;
+            font-weight: bold;
+        }
+
+        .grand-total {
+            background-color: #a9a9a9;
+            color: #fff;
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body>
 
     <h2 style="text-align: center;">Sales vs Expenses Report</h2>
@@ -95,7 +127,7 @@
                         @php
                             $e = $zoneData['totals']['expense'];
                             $s = $zoneData['totals']['sales'];
-                            echo $e > 0 ? number_format($s / $e, 2) . '%' : ($s > 0 ? 'N/A' : '0%');
+                            echo $e > 0 ? number_format($e / $s, 2) . '%' : ($s > 0 ? '0%' : '0%');
                         @endphp
                     </td>
                 </tr>
@@ -111,4 +143,5 @@
     </table>
 
 </body>
+
 </html>

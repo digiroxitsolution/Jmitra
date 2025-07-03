@@ -119,7 +119,7 @@
                             borderWidth: 2,
                             borderDash: [6, 6],
                             label: {
-                                content: 'Overall E/S: ' + averageRatio.toFixed(2)+'%',
+                                content: 'Overall S/E: ' + averageRatio.toFixed(2)+'%',
                                 enabled: true,
                                 backgroundColor: 'rgba(255, 99, 132, 0.8)',
                                 color: '#000',

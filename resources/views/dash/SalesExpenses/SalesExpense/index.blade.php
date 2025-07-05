@@ -200,15 +200,28 @@
                                             <td>Rs. {{ number_format($zoneData['totals']['expense'], 2) }}</td>
                                             <td>Rs. {{ number_format($zoneData['totals']['sales'], 2) }}</td>
                                             <td>
-                                                @php
+                                                {{-- @php
                                                     $e = $zoneData['totals']['expense'];
                                                     $s = $zoneData['totals']['sales'];
                                                     echo $e > 0
-                                                        ? number_format(($e/$s) , 2) . '%'
+                                                        ? number_format($e / $s, 2) . '%'
                                                         : ($s > 0
                                                             ? 'N/A'
                                                             : '0%');
+                                                @endphp --}}
+                                                @php
+                                                    $e = $zoneData['totals']['expense'];
+                                                    $s = $zoneData['totals']['sales'];
+
+                                                    if ($s > 0) {
+                                                        echo number_format(($e / $s) * 100, 2) . '%';
+                                                    } elseif ($e > 0) {
+                                                        echo '0%';
+                                                    } else {
+                                                        echo '0%';
+                                                    }
                                                 @endphp
+
                                             </td>
                                         </tr>
                                     @endforeach

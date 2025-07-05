@@ -124,10 +124,22 @@
                     <td>Rs. {{ number_format($zoneData['totals']['expense'], 2) }}</td>
                     <td>Rs. {{ number_format($zoneData['totals']['sales'], 2) }}</td>
                     <td>
-                        @php
+                        {{-- @php
                             $e = $zoneData['totals']['expense'];
                             $s = $zoneData['totals']['sales'];
                             echo $e > 0 ? number_format($e / $s, 2) . '%' : ($s > 0 ? '0%' : '0%');
+                        @endphp --}}
+                        @php
+                            $e = $zoneData['totals']['expense'] ?? 0;
+                            $s = $zoneData['totals']['sales'] ?? 0;
+
+                            if ($s > 0) {
+                                $ratio = number_format(($e / $s) * 100, 2) . '%';
+                            } elseif ($e > 0) {
+                                $ratio = '0%';
+                            } else {
+                                $ratio = '0%';
+                            }
                         @endphp
                     </td>
                 </tr>

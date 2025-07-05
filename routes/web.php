@@ -46,16 +46,6 @@ use App\Http\Controllers\SalesExpensesController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\LocationController;
-
-
-
-
-
-
-
-
-
-
 use App\Models\State;
 use App\Models\City;
 

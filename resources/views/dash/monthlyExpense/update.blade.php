@@ -127,7 +127,7 @@
 										  	
 											<div class="col-lg-6 col-12 mb-lg-0 mb-3" style="display:none;">
 												<label for="km_as_per_google_map" class="form-label">KM. as per Google Map:<span class="text-danger">*</span></label>
-												<input type="number" class="form-control no-negative" id="km_as_per_google_map" name="km_as_per_google_map" placeholder="KM. as per Google Map" value="{{ $monthly_expense->km_as_per_google_map }}" step="any" readonly>
+												<input type="number" class="form-control no-negative" id="km_as_per_google_map" name="km_as_per_google_map" placeholder="KM. as per Google Map" value="{{ $monthly_expense->km_as_per_google_map }}" step="any" >
 											</div>
 
 											<div class="col-lg-6 col-12 mb-lg-0 mb-3">
@@ -806,9 +806,10 @@
 	            });
 
 	            const data = await response.json();
+				
 	            console.log('Server response:', data);
 
-	            if (response.ok) {
+	            if (data.status=='OK') {
 	                const distance = data.rows?.[0]?.elements?.[0]?.distance;
 
 	                if (distance && distance.value) {
@@ -827,9 +828,10 @@
 
 	        // Convert total distance from meters to kilometers
 	        const totalDistanceInKm = (totalDistance / 1000).toFixed(2);
+         $('#km_as_per_google_map').val(totalDistanceInKm);
 
 	        // Fill the total distance in the km_as_per_google_map input field
-	        document.getElementById('km_as_per_google_map').value = totalDistanceInKm;
+	        // document.getElementById('km_as_per_google_map').value = totalDistanceInKm;
 
 	    } catch (error) {
 	        console.error('Error fetching distance matrix:', error);

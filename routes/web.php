@@ -285,7 +285,6 @@ Route::group(['middleware' => ['auth']], function() {
         $from = $request->input('from');
         $to = $request->input('to');
         $apiKey = env('GOOGLE_MAPS_API_KEY');
-
         if (empty($from) || empty($to)) {
             return response()->json(['error' => 'Both "from" and "to" locations are required.'], 400);
         }
@@ -293,7 +292,8 @@ Route::group(['middleware' => ['auth']], function() {
         $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" . urlencode($from) . "&destinations=" . urlencode($to) . "&key={$apiKey}";
 
         try {
-            $response = Http::get($url);
+           $response = Http::withoutVerifying() // or Http::withOptions(['verify' => false])
+                        ->get($url);
 
             if ($response->successful()) {
                 Log::info('Google API Response:', $response->json()); // Log for debugging

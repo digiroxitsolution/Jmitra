@@ -110,6 +110,7 @@ class MonthlyExpensesController extends Controller
     }
 
     public function update(Request $request, $id){
+      
         try {
             $monthly_expenses = MonthlyExpense::find($id);
 
